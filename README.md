@@ -18,7 +18,6 @@ AI Car with Real-Time Detection of Damaged Road and Lane Detection is an intelli
 
 Built using Python, Flask, SQLite, OpenCV, Ultralytics YOLOv8, HTML, CSS, JavaScript, and Computer Vision techniques, the project demonstrates how Artificial Intelligence and Deep Learning can be integrated into intelligent transportation systems to improve road safety, support autonomous driving, and enable efficient road maintenance.
 
----
 
 ## Tech Stack:
 
@@ -41,8 +40,6 @@ Built using Python, Flask, SQLite, OpenCV, Ultralytics YOLOv8, HTML, CSS, JavaSc
 • JavaScript – Interactive frontend functionality and GPS location capture
 
 • Flask-CORS – Cross-Origin Resource Sharing support
-
----
 
 ## Features:
 
@@ -67,8 +64,6 @@ Built using Python, Flask, SQLite, OpenCV, Ultralytics YOLOv8, HTML, CSS, JavaSc
 💾 Database Integration — Stores user details, GPS locations, and road damage detection history using SQLite.
 
 🌐 Responsive Web Application — Modern, clean, and user-friendly interface accessible from multiple devices.
-
----
 
 ## Demo Preview:
 
