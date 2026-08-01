@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>AI Car Signup</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+height:100vh;
+font-family:Inter;
+display:flex;
+justify-content:center;
+align-items:center;
+background:linear-gradient(to bottom, #000814, #001d3d);
+overflow:hidden;
+}
+
+/* Glow effect */
+body::before{
+content:"";
+position:absolute;
+width:500px;
+height:500px;
+background:radial-gradient(circle, rgba(0,242,255,0.2), transparent);
+top:30%;
+left:50%;
+transform:translate(-50%,-50%);
+filter:blur(120px);
+}
+
+/* Card */
+.signup-box{
+position:relative;
+z-index:2;
+width:400px;
+padding:35px;
+border-radius:20px;
+background:rgba(255,255,255,0.05);
+backdrop-filter:blur(15px);
+border:1px solid rgba(0,242,255,0.2);
+box-shadow:0 0 30px rgba(0,242,255,0.3);
+color:white;
+text-align:center;
+}
+
+/* Title */
+h2{
+font-family:Orbitron;
+margin-bottom:20px;
+color:#00f2ff;
+text-shadow:0 0 20px #00f2ff;
+}
+
+/* Input */
+input{
+width:100%;
+padding:12px;
+margin:10px 0;
+border-radius:10px;
+border:none;
+background:rgba(255,255,255,0.08);
+color:white;
+outline:none;
+font-size:14px;
+}
+
+input::placeholder{ color:#aaa; }
+input:focus{ box-shadow:0 0 10px #00f2ff; }
+
+/* Button */
+button{
+width:100%;
+padding:12px;
+border:none;
+border-radius:25px;
+background:#00f2ff;
+color:black;
+font-weight:bold;
+cursor:pointer;
+transition:0.3s;
+}
+
+button:hover{
+background:#00cce0;
+box-shadow:0 0 20px #00f2ff;
+}
+
+/* Flash messages */
+.success-msg{
+margin-bottom:15px;
+padding:10px;
+border-radius:10px;
+background:rgba(0,255,170,0.15);
+border:1px solid #00ffaa;
+color:#00ffaa;
+font-size:14px;
+}
+
+.error-msg{
+margin-bottom:15px;
+padding:10px;
+border-radius:10px;
+background:rgba(255,0,0,0.15);
+border:1px solid #ff4d4d;
+color:#ff4d4d;
+font-size:14px;
+}
+
+p{
+margin-top:15px;
+font-size:14px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="signup-box">
+<h2>AI CAR SIGNUP</h2>
+
+<!-- Flash Messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+        <div class="{{ category }}-msg">
+            {{ message }}
+        </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+<form method="POST" action="{{ url_for('signup') }}">
+
+    <input name="name" type="text" placeholder="Full Name" required>
+
+    <input name="email" type="email" placeholder="Email" required>
+
+    <input name="password" type="password" placeholder="Password" required>
+
+    <input name="confirm" type="password" placeholder="Confirm Password" required>
+
+    <button type="submit">Create Account</button>
+
+</form>
+
+<p>Already have an account?</p>
+
+<a href="{{ url_for('login') }}">
+    <button type="button">Login</button>
+</a>
+
+</div>
+
+</body>
+</html>

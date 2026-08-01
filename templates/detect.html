@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Detection System</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:Inter,sans-serif;
+background:#000814;
+color:white;
+}
+
+nav{
+position:fixed;
+width:100%;
+top:0;
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:20px 60px;
+background:rgba(0,0,0,0.6);
+backdrop-filter:blur(12px);
+}
+
+.nav-links a{
+color:white;
+text-decoration:none;
+margin-left:25px;
+font-weight:500;
+}
+
+.nav-links a:hover{
+color:#00f2ff;
+}
+
+.logo{
+font-family:Orbitron;
+font-size:22px;
+font-weight:700;
+color:#00f2ff;
+}
+
+.hero{
+height:60vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
+background:linear-gradient(rgba(0,0,0,0.8),rgba(0,0,0,0.6)),url("/static/bg.png");
+background-size:cover;
+background-position:center;
+margin-top:50px;
+}
+
+.hero h1{
+font-family:Orbitron;
+font-size:48px;
+text-shadow:0 0 15px #00f2ff;
+}
+
+.detection-section{
+padding:120px 20px;
+text-align:center;
+display:flex;
+flex-direction:column;
+align-items:center;
+}
+
+.upload-box{
+border:2px dashed #00f2ff;
+padding:50px;
+border-radius:20px;
+max-width:600px;
+margin:40px auto;
+background:rgba(255,255,255,0.05);
+}
+
+button{
+margin-top:20px;
+padding:12px 30px;
+border:none;
+border-radius:30px;
+background:#00f2ff;
+color:black;
+font-weight:bold;
+cursor:pointer;
+box-shadow:0 0 15px #00f2ff;
+transform:scale(1.05);
+}
+
+.result-box{
+margin-top:40px;
+padding:30px;
+border-radius:20px;
+background:rgba(255,255,255,0.05);
+max-width:700px;
+margin-left:auto;
+margin-right:auto;
+display:none;
+}
+
+
+.camera-container{
+    width:100%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    margin-top:40px;
+}
+
+.camera-box{
+    text-align:center;
+    padding:30px;
+    border-radius:20px;
+    background:rgba(255,255,255,0.05);
+    border:2px solid #00f2ff;
+    box-shadow:0 0 15px #00f2ff;
+}
+
+#video{
+    width:500px;
+    border-radius:10px;
+    margin-top:10px;
+}
+
+#allMap{
+    width: 90%;
+    height: 400px;
+    margin: 30px auto;
+    border-radius: 15px;
+    border: 2px solid #00f2ff;
+    box-shadow: 0 0 15px #00f2ff;
+}
+
+footer{
+text-align:center;
+padding:30px;
+margin-top:100px;
+}
+
+</style>
+</head>
+
+<body>
+
+<nav>
+<div class="logo">AI CAR</div>
+
+<div class="nav-links">
+<a href="{{ url_for('home') }}">Home</a>
+<a href="{{ url_for('about') }}">About</a>
+
+</div>
+</nav>
+
+<section class="hero">
+<h1>AI Detection Panel</h1>
+<p>Upload road images or videos for pothole detection</p>
+</section>
+
+<section class="detection-section">
+
+<h2 style="font-family:Orbitron;">🚗 Start Detection</h2>
+
+<h3>Select Detection</h3>
+
+<select id="modeSelect">
+    <option value="damage">Road Damage</option>
+    <option value="lane">Lane Detection</option>
+</select>
+
+<div class="upload-box">
+
+<p>Upload Image or Video</p>
+
+<input type="file" id="fileUpload" accept="image/*,video/*">
+<input type="hidden" id="modeInput" name="type">
+
+<br>
+
+<button onclick="runDetection()">Run AI Detection</button>
+
+</div>
+
+<div class="result-box" id="resultBox">
+
+<h3>Detection Result</h3>
+
+<p id="resultText">Processing...</p>
+
+<img id="previewImage" width="500">
+
+<audio id="alertSound" src="https://www.soundjay.com/button/beep-07.wav"></audio>
+
+<!-- LIVE YOLO VIDEO STREAM -->
+<img id="videoStream" width="640"  style="display:none">
+
+<br><br>
+<h3>Performance Graph</h3>
+
+<h2>Real-Time Performance Graph</h2>
+
+<canvas id="fpsChart" width="800" height="400"></canvas>
+
+<img id="graphImage" width="600" style="display:none">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+const ctx = document.getElementById('fpsChart').getContext('2d');
+
+const chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: [],
+        datasets: [{
+            label: 'FPS Performance',
+            data: [],
+            borderWidth: 3,
+            fill: false
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            x: {
+                title: {
+                    display: true,
+                    text: 'Frame Number'
+                }
+            },
+            y: {
+                title: {
+                    display: true,
+                    text: 'FPS'
+                }
+            }
+        }
+    }
+});
+
+function updateGraph(){
+
+    fetch('/fps_data')
+    .then(response => response.json())
+    .then(data => {
+
+        chart.data.labels = data.frames;
+        chart.data.datasets[0].data = data.fps;
+
+        chart.update();
+
+    });
+}
+
+setInterval(updateGraph, 1000);
+
+</script>
+
+</section>
+
+
+
+<h3 style="text-align:center;">📍 Live Location Map</h3>
+
+<div style="display:flex; justify-content:center; align-items:center; margin-top:20px;">
+    <iframe 
+        id="mapFrame"
+        width="80%"
+        height="400"
+        style="border-radius:10px; border:2px solid #00f2ff;">
+    </iframe>
+</div>
+
+
+
+
+<h2 style="font-family:Orbitron; text-align:center;">
+Live Camera Detection
+</h2>
+
+<div class="camera-container">
+
+    <div class="camera-box">
+
+<button onclick="startCamera()">Start Camera</button>
+<button onclick="stopCamera()">Stop Camera</button>
+
+<br><br>
+
+<video id="video" width="500" height="350" autoplay muted></video>
+
+<script>
+let stream = null;
+
+async function startCamera() {
+    try {
+        stream = await navigator.mediaDevices.getUserMedia({ video: true });
+
+        document.getElementById("video").srcObject = stream;
+
+    } catch (err) {
+        alert("Camera access denied");
+    }
+}
+
+function stopCamera() {
+
+    if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+        document.getElementById("video").srcObject = null;
+    }
+
+}
+</script>
+
+<footer>
+<p>© 2026 AI Car Detection System</p>
+</footer>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDym_zooM0VKmt1cEaftfwijl3ptFI0C5Y"></script>
+
+<script>
+
+let map;
+let marker;
+let watchId = null;
+
+// ✅ Initialize map
+function initMap(lat = 20.5937, lon = 78.9629){
+
+    map = new google.maps.Map(document.getElementById("allMap"), {
+        zoom: 15,
+        center: { lat: lat, lng: lon }
+    });
+
+    marker = new google.maps.Marker({
+        position: { lat: lat, lng: lon },
+        map: map,
+        title: "Live Location 🚗"
+    });
+}
+
+// ✅ START LIVE TRACKING
+function startLiveTracking(){
+
+    if (!navigator.geolocation) {
+        alert("Geolocation not supported");
+        return;
+    }
+
+    // 🔥 clear old tracking (VERY IMPORTANT)
+    if(watchId){
+        navigator.geolocation.clearWatch(watchId);
+    }
+
+    watchId = navigator.geolocation.watchPosition(
+        function(position){
+
+            let lat = position.coords.latitude;
+            let lon = position.coords.longitude;
+
+            console.log("LIVE TRACK:", lat, lon);
+
+            let newPos = { lat: lat, lng: lon };
+
+            // move marker
+            marker.setPosition(newPos);
+
+            // move map center
+            map.setCenter(newPos);
+        },
+
+        function(error){
+            console.log("GPS Error:", error);
+        },
+
+        {
+            enableHighAccuracy: true,
+            maximumAge: 0,
+            timeout: 10000
+        }
+    );
+}
+
+</script>
+
+<script>
+
+async function runDetection(){
+
+    startLiveTracking();
+
+    let file = document.getElementById("fileUpload").files[0];
+    let resultBox = document.getElementById("resultBox");
+    let resultText = document.getElementById("resultText");
+    let preview = document.getElementById("previewImage");
+    let stream = document.getElementById("videoStream");
+    let map = document.getElementById("mapFrame");
+
+if(!file){
+    alert("Please upload a file");
+    return;
+}
+
+resultBox.style.display="block";
+
+let type = file.type;
+let mode = document.getElementById("modeSelect").value;
+
+// ✅ STEP 1: GET GPS FIRST
+navigator.geolocation.getCurrentPosition(async function(position){
+
+    let latitude = position.coords.latitude;
+    let longitude = position.coords.longitude;
+
+    console.log("Lat:", latitude, "Lon:", longitude);
+
+    // ✅ SHOW MAP ALWAYS
+    map.src = `https://maps.google.com/maps?q=${latitude},${longitude}&z=15&output=embed`;
+
+
+    // ================= VIDEO =================
+    if(type.startsWith("video")){
+        startLiveTracking();
+
+        resultText.innerHTML = "🎥 Uploading video and starting detection...";
+
+        let formData = new FormData();
+        formData.append("video", file);
+        formData.append("type", mode);
+        formData.append("lat", latitude);
+        formData.append("lon", longitude);
+
+        await fetch("/upload",{
+            method:"POST",
+            body:formData
+        });
+
+        // 🔥 VERY IMPORTANT
+        stream.src = "/video_feed?" + new Date().getTime();
+
+        stream.style.display = "block";
+        preview.style.display = "none";
+
+        resultText.innerHTML += "<br>📍 Location: " + latitude.toFixed(4) + ", " + longitude.toFixed(4);
+
+    }
+
+    // ================= IMAGE =================
+    else{
+
+        resultText.innerHTML = "🖼 Processing image...";
+
+        let formData = new FormData();
+        formData.append("image", file);
+        formData.append("type", mode);
+        formData.append("lat", latitude);
+        formData.append("lon", longitude);
+
+        let res = await fetch("/detect_image",{
+            method:"POST",
+            body:formData
+        });
+
+        let data = await res.json();
+
+        preview.src = data.result;
+
+        preview.style.display = "block";
+        stream.style.display = "none";
+
+        resultText.innerHTML =
+        "📍 Location: " + latitude.toFixed(4) + ", " + longitude.toFixed(4) +
+        "<br>Potholes: " + data.damage +
+        " | Found: " + data.pothole;
+
+    }
+
+},
+function(error){
+    alert("GPS permission denied");
+});
+
+}
+
+function stopTracking(){
+    if(watchId != null){
+       navigator.geolocation.clearWatch(watchId);
+       trackingActive = false;
+       watchId = null; 
+    }
+}
+
+strem.onload = () => {
+    stopLiveTracking();
+};
+
+</script>
+</body>
+</html>

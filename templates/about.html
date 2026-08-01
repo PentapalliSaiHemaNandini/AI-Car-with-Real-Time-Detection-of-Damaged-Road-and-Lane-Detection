@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About - AI Car System</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+font-family:Inter;
+color:rgb(209, 209, 216);
+
+/* ✅ BLUE THEME (fixed) */
+background:linear-gradient(to bottom,#000814,#001d3d);
+
+overflow-x:hidden;
+scroll-behavior:smooth;
+}
+
+/* NAV */
+nav{
+position:fixed;
+width:100%;
+top:0;
+display:flex;
+justify-content:space-between;
+padding:20px 60px;
+background:rgba(0, 0, 0, 0.6);
+backdrop-filter:blur(10px);
+z-index:1000;
+}
+
+.logo{
+font-family:Orbitron;
+color:#00f2ff;
+font-size:22px;
+}
+
+nav a{
+color:white;
+margin-left:20px;
+text-decoration:none;
+}
+
+/* HERO */
+.hero{
+height:100vh;
+position:relative;
+background:
+linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.4)),
+url("about title.png");
+background-size:cover;
+background-position:center;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
+padding:20px;
+}
+
+.hero h1{
+font-size:60px;
+font-family:Orbitron;
+color:white;
+text-shadow:0 0 20px #00f2ff;
+}
+
+.hero p{
+margin-top:20px;
+max-width:700px;
+}
+
+/* SECTION */
+.section{
+padding:120px 60px;
+max-width:1200px;
+margin:auto;
+display:flex;
+flex-wrap:wrap;
+align-items:center;
+gap:50px;
+
+/* ✅ BLUE BACKGROUND FIX */
+background:#001d3d;
+
+opacity:0;
+transform:translateY(40px);
+transition:1s;
+}
+
+.section.show{
+opacity:1;
+transform:translateY(0);
+}
+
+.section img{
+width:100%;
+max-width:500px;
+border-radius:15px;
+box-shadow:0 0 30px rgba(0,242,255,0.2);
+}
+
+.text{
+flex:1;
+line-height:1.9;
+}
+
+h2{
+font-family:Orbitron;
+color:#00f2ff;
+margin-bottom:20px;
+}
+
+/* REVERSE */
+.reverse{
+flex-direction:row-reverse;
+}
+
+/* FOOTER */
+footer{
+text-align:center;
+padding:40px;
+background:#000814;
+margin-top:80px;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- NAV -->
+<nav>
+<div class="logo">AI CAR</div>
+<div>
+<a href="{{ url_for('home') }}">Home</a>
+<a href="{{ url_for('detect') }}">Detect</a>
+</div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+<h1>Intelligence on Every Road</h1>
+<p>Our AI Car system is not just a detection tool — it understands and reacts to real-world road conditions.</p>
+</section>
+
+<!-- IDEA -->
+<section class="section">
+<img src="{{ url_for('static', filename='images/about.jpg') }}">
+<div class="text">
+<h2>Our Idea</h2>
+<p>
+Modern transportation systems face unpredictable challenges such as potholes, faded lane markings, and sudden road damage.
+Our system enables vehicles to actively understand these conditions instead of relying only on driver awareness.
+It transforms vehicles into intelligent systems capable of real-time decision support.
+</p>
+</div>
+</section>
+
+<!-- FEATURES -->
+<section class="section reverse">
+<img src="{{ url_for('static', filename='images/about1.png') }}">
+<div class="text">
+<h2>Beyond Basic Detection</h2>
+<p>
+Our system introduces adaptive vision that works under varying lighting and weather conditions.
+Edge processing ensures real-time responses without internet dependency.
+Smart alerts simplify complex data into meaningful driver feedback.
+Continuous learning improves system accuracy with real-world exposure.
+</p>
+</div>
+</section>
+
+<!-- TECH -->
+<section class="section">
+<img src="{{ url_for('static', filename='images/about2.png') }}">
+<div class="text">
+<h2>Technology Behind the System</h2>
+<p>
+The system uses deep learning and computer vision to process live video frames instantly.
+It identifies lane structures and road damage patterns with high precision.
+Real-time processing ensures immediate detection and response.
+</p>
+</div>
+</section>
+
+<!-- WORKFLOW -->
+<section class="section reverse">
+<img src="{{ url_for('static', filename='images/about3.jpg') }}">
+<div class="text">
+<h2>How It Works</h2>
+<p>
+The system captures live video, processes it using AI models, detects lanes and potholes,
+and provides real-time alerts to assist the driver.
+This pipeline runs continuously to ensure safe driving conditions.
+</p>
+</div>
+</section>
+
+<!-- IMPACT -->
+<section class="section">
+<img src="{{ url_for('static', filename='images/about5.jpg') }}">
+<div class="text">
+<h2>Why It Matters</h2>
+<p>
+This system reduces accidents, enhances driver awareness, and supports smart city infrastructure.
+It plays a vital role in the future of autonomous driving by enabling intelligent road understanding.
+</p>
+</div>
+</section>
+
+<!-- FUTURE -->
+<section class="section reverse">
+<img src="{{ url_for('static', filename='images/about4.png') }}">
+<div class="text">
+<h2>Future Scope</h2>
+<p>
+Future integration includes smart traffic systems, government road monitoring,
+and autonomous vehicles. The system will evolve into a fully intelligent mobility solution.
+</p>
+</div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+<p>© 2026 AI Car Detection System</p>
+</footer>
+
+<script>
+const sections=document.querySelectorAll(".section");
+
+window.addEventListener("scroll",()=>{
+sections.forEach(sec=>{
+const top=sec.getBoundingClientRect().top;
+if(top<window.innerHeight-100){
+sec.classList.add("show");
+}
+});
+});
+</script>
+
+</body>
+</html>

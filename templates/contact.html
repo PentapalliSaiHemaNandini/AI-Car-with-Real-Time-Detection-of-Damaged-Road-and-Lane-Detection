@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Contact – AI Car System</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+height:100vh;
+font-family:Inter;
+display:flex;
+justify-content:center;
+align-items:center;
+background:linear-gradient(to bottom, #000814, #001d3d);
+overflow:hidden;
+color:white;
+}
+
+/* Glow background */
+body::before{
+content:"";
+position:absolute;
+width:500px;
+height:500px;
+background:radial-gradient(circle, rgba(0,242,255,0.2), transparent);
+top:30%;
+left:50%;
+transform:translate(-50%,-50%);
+filter:blur(120px);
+}
+
+/* HOME BUTTON – TOP RIGHT CORNER */
+.home-btn{
+position: fixed;      /* keeps button at screen corner */
+top: 20px;
+right: 25px;
+padding: 10px 22px;
+border: none;
+border-radius: 25px;
+background: #00f2ff;
+color: black;
+font-weight: bold;
+cursor: pointer;
+transition: 0.3s;
+z-index: 9999;        /* ensures it stays above everything */
+}
+
+.home-btn:hover{
+background: #00cce0;
+box-shadow: 0 0 15px #00f2ff;
+}
+
+/* FLOATING BACK TO HOME BUTTON */
+.back-home{
+position: fixed;
+bottom: 25px;
+right: 25px;
+width: 60px;
+height: 60px;
+border-radius: 50%;
+border: none;
+font-size: 26px;
+background: linear-gradient(135deg, #00f2ff, #00cce0);
+color: black;
+cursor: pointer;
+box-shadow: 0 0 20px rgba(0,242,255,0.6);
+transition: 0.3s ease;
+z-index: 9999;
+}
+
+/* Hover effect */
+.back-home:hover{
+transform: scale(1.15) rotate(10deg);
+box-shadow: 0 0 30px rgba(0,242,255,0.9);
+}
+
+/* FLOATING LOGOUT BUTTON */
+.logout-float{
+position: fixed;
+bottom: 95px;        /* above home icon */
+right: 25px;
+width: 60px;
+height: 60px;
+border-radius: 50%;
+border: none;
+font-size: 22px;
+background: linear-gradient(135deg, #ff3b3b, #ff0000);
+color: white;
+cursor: pointer;
+box-shadow: 0 0 20px rgba(255,0,0,0.6);
+transition: 0.3s ease;
+z-index: 9999;
+}
+
+.logout-float:hover{
+transform: scale(1.15) rotate(-10deg);
+box-shadow: 0 0 30px rgba(255,0,0,0.9);
+}
+
+
+/* Mobile responsive */
+@media(max-width:600px){
+.back-home{
+width: 50px;
+height: 50px;
+font-size: 22px;
+bottom: 18px;
+right: 18px;
+}
+}
+
+/* Contact card */
+.contact-box{
+position:relative;
+z-index:2;
+width:400px;
+padding:35px;
+border-radius:20px;
+background:rgba(255,255,255,0.05);
+backdrop-filter:blur(15px);
+border:1px solid rgba(0,242,255,0.2);
+box-shadow:0 0 30px rgba(0,242,255,0.3);
+text-align:center;
+}
+
+/* Title */
+h2{
+font-family:Orbitron;
+margin-bottom:15px;
+color:#00f2ff;
+text-shadow:0 0 20px #00f2ff;
+}
+
+/* Info text */
+.info{
+font-size:14px;
+margin-bottom:15px;
+color:#ccc;
+}
+
+/* Inputs */
+input, textarea{
+width:100%;
+padding:12px;
+margin:10px 0;
+border-radius:10px;
+border:none;
+background:rgba(255,255,255,0.08);
+color:white;
+outline:none;
+font-size:14px;
+}
+
+textarea{
+resize:none;
+height:90px;
+}
+
+input::placeholder, textarea::placeholder{
+color:#aaa;
+}
+
+input:focus, textarea:focus{
+box-shadow:0 0 10px #00f2ff;
+}
+
+/* Button */
+button{
+width:100%;
+padding:12px;
+border:none;
+border-radius:25px;
+background:#00f2ff;
+color:black;
+font-weight:bold;
+cursor:pointer;
+transition:0.3s;
+}
+
+button:hover{
+background:#00cce0;
+box-shadow:0 0 20px #00f2ff;
+}
+
+/* Success message */
+.success{
+display:none;
+margin-top:12px;
+padding:10px;
+border-radius:10px;
+background:rgba(0,255,170,0.15);
+border:1px solid #00ffaa;
+color:#00ffaa;
+font-size:14px;
+}
+
+.back-home, .logout-float {
+    display:inline-block;
+    padding:10px 20px;
+    background:#00f2ff;
+    color:black;
+    border-radius:20px;
+    text-decoration:none;
+}
+</style>
+</head>
+
+<body>
+
+<!-- Floating Back to Home Button -->
+<a href="{{ url_for('home') }}" class="back-home">🏠</a>
+
+<!-- FLOATING LOGOUT ICON -->
+<button class="logout-float" onclick="confirmLogout()">⎋</button>
+
+<!-- CONTACT BOX -->
+<div class="contact-box">
+<h2>Contact Us</h2>
+
+<div class="info">
+📞 Phone: 040-1724-4863 <br>
+📧 Email: Aicarsystem@gmail.com
+</div>
+
+<form id="contactForm">
+<input type="text" placeholder="Your Name" required>
+<input type="email" placeholder="Your Email" required>
+<textarea placeholder="Your Message..." required></textarea>
+
+<button type="submit">Send Message</button>
+</form>
+
+<div class="success" id="msg">
+Message sent successfully! We will contact you soon.
+</div>
+
+</div>
+
+<script>
+document.getElementById("contactForm").addEventListener("submit", function(e){
+e.preventDefault();
+document.getElementById("msg").style.display = "block";
+});
+</script>
+
+<script>
+function confirmLogout() {
+    let ask = confirm("Are you sure you want to logout?");
+    if (ask) {
+        window.location.href = "{{ url_for('logout') }}";
+    }
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 17
+names: ['lane']
+
+roboflow:
+  workspace: ai-car-with-realtime-detection-of-damaged-road-and-lane-detection
+  project: lane-detection-vuawy-kzrwn
+  version: 1
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/ai-car-with-realtime-detection-of-damaged-road-and-lane-detection/lane-detection-vuawy-kzrwn/dataset/1

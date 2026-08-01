@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Features - AI Car</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+font-family:Inter;
+color:white;
+background:linear-gradient(to bottom,#000814,#001d3d);
+overflow-x:hidden;
+}
+
+/* NAV */
+nav{
+position:fixed;
+width:100%;
+top:0;
+display:flex;
+justify-content:space-between;
+padding:20px 60px;
+background:rgba(0,0,0,0.6);
+backdrop-filter:blur(10px);
+z-index:1000;
+}
+
+.logo{
+font-family:Orbitron;
+color:#00f2ff;
+font-size:22px;
+}
+
+nav a{
+color:white;
+margin-left:20px;
+text-decoration:none;
+}
+
+/* SMALL TITLE */
+.title{
+margin-top:120px;
+text-align:center;
+font-family:Orbitron;
+font-size:28px;
+color:#00f2ff;
+}
+
+/* FEATURE SECTION */
+.feature{
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:50px;
+padding:100px 60px;
+max-width:1200px;
+margin:auto;
+}
+
+/* REVERSE */
+.reverse{
+flex-direction:row-reverse;
+}
+
+.feature img{
+width:50%;
+border-radius:15px;
+box-shadow:0 0 40px rgba(0,242,255,0.3);
+transition:0.5s;
+}
+
+.feature img:hover{
+transform:scale(1.05);
+}
+
+.text{
+width:50%;
+line-height:1.8;
+}
+
+.text h2{
+font-family:Orbitron;
+color:#00f2ff;
+margin-bottom:15px;
+}
+
+.text p{
+color:#cfd8dc;
+}
+
+/* MOBILE */
+@media(max-width:768px){
+.feature{
+flex-direction:column;
+}
+.feature img, .text{
+width:100%;
+}
+}
+
+/* FOOTER */
+footer{
+text-align:center;
+padding:40px;
+background:#000814;
+margin-top:80px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAV -->
+<nav>
+<div class="logo">AI CAR</div>
+<div>
+<div>
+<a href="{{ url_for('home') }}">Home</a>
+<a href="{{ url_for('about') }}">About</a>
+<a href="{{ url_for('contact') }}">Contact</a>
+</div>
+</div>
+</nav>
+
+<!-- SMALL TITLE -->
+<div class="title">System Features</div>
+
+<!-- FEATURE 1 -->
+<section class="feature">
+<img src="{{ url_for('static', filename='images/lane.jpg') }}"> 
+<div class="text">
+<h2>Lane Detection</h2>
+<p>
+The system continuously analyzes road markings and ensures that the vehicle stays within its lane. 
+It intelligently detects curves, broken lines, and faded markings, helping drivers maintain safe positioning 
+even in complex road conditions.
+</p>
+</div>
+</section>
+
+<!-- FEATURE 2 -->
+<section class="feature reverse">
+<img src="{{ url_for('static', filename='images/pothole.jpg') }}">
+<div class="text">
+<h2>Pothole Detection</h2>
+<p>
+Using advanced computer vision, the system identifies damaged road surfaces such as potholes and cracks. 
+It alerts drivers in real-time, reducing the risk of accidents and improving overall driving safety.
+</p>
+</div>
+</section>
+
+<!-- FEATURE 3 -->
+<section class="feature">
+<img src="{{ url_for('static', filename='images/collision.jpg') }}">
+<div class="text">
+<h2>Collision Warning</h2>
+<p>
+The system predicts potential collisions by analyzing nearby vehicles and obstacles. 
+It provides early warnings, giving drivers enough time to react and avoid accidents.
+</p>
+</div>
+</section>
+
+<!-- FEATURE 4 -->
+<section class="feature reverse">
+<img src="{{ url_for('static', filename='images/gps.jpg') }}">
+<div class="text">
+<h2>GPS Tracking</h2>
+<p>
+Real-time GPS tracking allows continuous monitoring of vehicle location. 
+It enhances navigation, route optimization, and supports smart transportation systems.
+</p>
+</div>
+</section>
+
+<!-- FEATURE 5 -->
+<section class="feature">
+<img src="{{ url_for('static', filename='images/alerts.jpg') }}">
+<div class="text">
+<h2>Smart Alerts & Notifications</h2>
+<p>
+The system delivers instant alerts and notifications based on road conditions. 
+Instead of complex data, it provides simple and clear warnings that drivers can easily understand.
+</p>
+</div>
+</section>
+
+<!-- FEATURE 6 -->
+<section class="feature reverse">
+<img src="{{ url_for('static', filename='images/warning.jpg') }}">
+<div class="text">
+<h2>Warning System</h2>
+<p>
+Advanced warning mechanisms combine visual and audio alerts to notify drivers of potential dangers. 
+This ensures quick response and enhances road safety significantly.
+</p>
+</div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+<p>© 2026 AI Car Detection System</p>
+</footer>
+
+</body>
+</html>

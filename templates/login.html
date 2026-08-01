@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>AI Car Login</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+height:100vh;
+font-family:Inter;
+display:flex;
+justify-content:center;
+align-items:center;
+background:linear-gradient(to bottom, #000814, #001d3d);
+overflow:hidden;
+}
+
+/* GLOW */
+body::before{
+content:"";
+position:absolute;
+width:500px;
+height:500px;
+background:radial-gradient(circle, rgba(0,242,255,0.2), transparent);
+top:30%;
+left:50%;
+transform:translate(-50%,-50%);
+filter:blur(120px);
+}
+
+/* CARD */
+.login-box{
+position:relative;
+z-index:2;
+width:380px;
+padding:35px;
+border-radius:20px;
+background:rgba(255,255,255,0.05);
+backdrop-filter:blur(15px);
+border:1px solid rgba(0,242,255,0.2);
+box-shadow:0 0 30px rgba(0,242,255,0.3);
+color:white;
+text-align:center;
+}
+
+/* TITLE */
+h2{
+font-family:Orbitron;
+margin-bottom:20px;
+color:#00f2ff;
+text-shadow:0 0 20px #00f2ff;
+}
+
+/* INPUT */
+input{
+width:100%;
+padding:12px;
+margin:10px 0;
+border-radius:10px;
+border:none;
+background:rgba(255,255,255,0.08);
+color:white;
+outline:none;
+font-size:14px;
+}
+
+input::placeholder{ color:#aaa; }
+input:focus{ box-shadow:0 0 10px #00f2ff; }
+
+/* BUTTON */
+button{
+width:100%;
+padding:12px;
+border:none;
+border-radius:25px;
+background:#00f2ff;
+color:black;
+font-weight:bold;
+cursor:pointer;
+transition:0.3s;
+}
+
+button:hover{
+background:#00cce0;
+box-shadow:0 0 20px #00f2ff;
+}
+
+/* FLASH MESSAGE */
+.success-msg{
+margin-bottom:15px;
+padding:10px;
+border-radius:10px;
+background:rgba(0,255,170,0.15);
+border:1px solid #00ffaa;
+color:#00ffaa;
+font-size:14px;
+}
+
+.error-msg{
+margin-bottom:15px;
+padding:10px;
+border-radius:10px;
+background:rgba(255,0,0,0.15);
+border:1px solid #ff4d4d;
+color:#ff4d4d;
+font-size:14px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="login-box">
+<h2>AI CAR LOGIN</h2>
+
+<!-- FLASH MESSAGE SECTION -->
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    {% for message in messages %}
+        <div class="success-msg">
+            {{ message }}
+        </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+<form method="POST" action="{{ url_for('login') }}" autocomplete="off">
+
+    <input name="email" type="email" placeholder="Email"
+           required autocomplete="off">
+
+    <input name="password" type="password" placeholder="Password"
+           required autocomplete="new-password">
+
+    <button type="submit">Login</button>
+
+</form>
+
+<p style="margin-top:15px;">New user?</p>
+
+<a href="{{ url_for('signup') }}" style="text-decoration:none;">
+    <button type="button">Create Account</button>
+</a>
+
+</div>
+
+<!-- Auto hide flash after 3 seconds -->
+<script>
+setTimeout(function(){
+    let msg = document.querySelector(".success-msg");
+    if(msg){
+        msg.style.display = "none";
+    }
+}, 3000);
+</script>
+
+</body>
+</html>

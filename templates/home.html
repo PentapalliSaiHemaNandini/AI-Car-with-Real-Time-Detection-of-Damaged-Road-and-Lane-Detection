@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Car Detection System</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+font-family:Inter,sans-serif;
+color:white;
+background:black;
+overflow-x:hidden;
+}
+
+/* ================= NAVBAR ================= */
+nav{
+position:fixed;
+width:100%;
+top:0;
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:20px 60px;
+background:rgba(0,0,0,0.6);
+backdrop-filter:blur(12px);
+z-index:1000;
+}
+
+.logo{
+font-family:Orbitron;
+font-size:22px;
+font-weight:700;
+color:#ff2e2e;
+}
+
+.nav-links{
+display:flex;
+gap:30px;
+}
+
+.nav-links a{
+color:white;
+text-decoration:none;
+position:relative;
+}
+
+.nav-links a::after{
+content:"";
+position:absolute;
+bottom:-5px;
+left:0;
+width:0%;
+height:2px;
+background:#ff2e2e;
+transition:0.3s;
+}
+
+.nav-links a:hover::after{
+width:100%;
+}
+
+/* ================= HERO ================= */
+/* ================= HERO ================= */
+.hero{
+height:100vh;
+
+/* 🔥 NEW PROFESSIONAL BACKGROUND IMAGE */
+background:
+linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.4)),
+url("{{ url_for('static', filename='images/road-ai-bg.jpg') }}");
+
+background-size:cover;
+background-position:center;
+background-repeat:no-repeat;
+
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
+padding:20px;
+position:relative;
+}
+
+/* DARK + COLOR GLOW OVERLAY */
+.hero::before{
+content:"";
+position:absolute;
+inset:0;
+background:
+linear-gradient(rgba(0,0,0,0.6),rgba(244, 238, 238, 0)),
+radial-gradient(circle at center, rgba(0,242,255,0.25), transparent 60%);
+z-index:1;
+}
+
+/* TEXT ABOVE */
+.hero h1,
+.hero p{
+position:relative;
+z-index:2;
+}
+
+/* BRIGHT NEON TEXT */
+.hero h1{
+font-family:Orbitron;
+font-size:60px;
+margin-top:80px;
+color:white;
+text-shadow:
+0 0 10px #00f2ff,
+0 0 20px #00f2ff,
+0 0 40px rgba(0,242,255,0.6);
+}
+
+.hero h1 span{
+color:#00f2ff;
+text-shadow:
+0 0 15px #00f2ff,
+0 0 30px #00f2ff,
+0 0 60px rgba(0,242,255,0.9);
+}
+
+.hero p{
+margin-top:20px;
+font-size:18px;
+opacity:1;
+text-shadow:0 0 10px rgba(255,255,255,0.6);
+}
+
+
+/* ================= IMAGE DETECTION CARDS ================= */
+.section{
+padding:120px 60px;
+text-align:center;
+background:#020c1b;
+}
+
+.section h2{
+font-family:Orbitron;
+font-size:42px;
+margin-bottom:50px;
+}
+
+.feature-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+gap:40px;
+max-width:1200px;
+margin:auto;
+}
+
+.card{
+position:relative;
+height:260px;
+border-radius:20px;
+overflow:hidden;
+cursor:pointer;
+transition:0.5s;
+border:1px solid rgba(255,255,255,0.15);
+}
+
+.card img{
+width:100%;
+height:100%;
+object-fit:cover;
+filter:brightness(0.6);
+transition:0.5s;
+}
+
+.card:hover img{
+transform:scale(1.1);
+}
+
+.card-content{
+position:absolute;
+bottom:0;
+width:100%;
+background:linear-gradient(to top,rgba(0,0,0,0.9),transparent);
+padding:20px;
+}
+
+.card-content h3{
+font-size:22px;
+margin-bottom:10px;
+}
+
+.card-content p{
+opacity:0;
+max-height:0;
+transition:0.5s;
+font-size:14px;
+}
+
+.card:hover .card-content p{
+opacity:1;
+max-height:200px;
+}
+
+/* ================= KEY FEATURES (NEON CARDS) ================= */
+.key-features{
+background:linear-gradient(to bottom,#000814,#001d3d);
+padding:120px 60px;
+text-align:center;
+}
+
+.key-features h2{
+font-family:Orbitron;
+font-size:42px;
+margin-bottom:60px;
+}
+
+.feature-card{
+position:relative;
+height:240px;
+border-radius:20px;
+background:rgba(255,255,255,0.05);
+border:1px solid rgba(255,255,255,0.15);
+backdrop-filter:blur(20px);
+overflow:hidden;
+cursor:pointer;
+transition:0.5s;
+}
+
+.feature-card:hover{
+transform:translateY(-10px) scale(1.05);
+}
+
+.card-front{
+position:absolute;
+inset:0;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+}
+
+.card-desc{
+position:absolute;
+inset:0;
+background:linear-gradient(135deg,#ff2e2e,#001d3d);
+display:flex;
+justify-content:center;
+align-items:center;
+text-align:center;
+padding:20px;
+opacity:0;
+transform:translateY(100%);
+transition:0.5s;
+}
+
+.feature-card:hover .card-desc{
+opacity:1;
+transform:translateY(0);
+}
+
+.blue{box-shadow:0 0 20px #00f2ff;}
+.red{box-shadow:0 0 20px #ff2e2e;}
+.yellow{box-shadow:0 0 20px #ffc107;}
+.purple{box-shadow:0 0 20px #b388ff;}
+.green{box-shadow:0 0 20px #00ff88;}
+
+/* ================= STATS ================= */
+.stats{
+background:linear-gradient(to right,#001d3d,#000814);
+padding:120px 60px;
+text-align:center;
+}
+
+.stats h2{
+font-family:Orbitron;
+margin-bottom:50px;
+}
+
+.stat-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:40px;
+max-width:1000px;
+margin:auto;
+}
+
+.stat-box{
+background:rgba(255,255,255,0.05);
+padding:40px;
+border-radius:20px;
+border:1px solid rgba(255,255,255,0.1);
+transition:0.4s;
+}
+
+.stat-box:hover{
+transform:translateY(-10px);
+box-shadow:0 0 25px #00f2ff;
+}
+
+.stat-box h3{
+font-size:36px;
+color:#00f2ff;
+margin-bottom:10px;
+}
+
+/* MOBILE */
+@media(max-width:768px){
+.hero h1{font-size:38px;}
+.nav-links{display:none;}
+}
+
+/* FOOTER */
+footer{
+text-align:center;
+padding:40px;
+background:#000814;
+margin-top:80px;
+}
+</style>
+
+<style>
+.navbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:15px 40px;
+    background:#001d3d;
+    color:white;
+}
+
+.profile-section{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.nav-links{
+display:flex;
+align-items:center;
+gap:20px;
+}
+
+.profile-circle{
+width:40px;
+height:40px;
+border-radius:50%;
+background:#ff4d6d;
+color:white;
+display:flex;
+justify-content:center;
+align-items:center;
+font-weight:bold;
+font-size:18px;
+box-shadow:0 0 8px rgba(0,0,0,0.3);
+cursor:pointer;
+}
+
+.username{
+    font-size:14px;
+}
+</style>
+
+<style>
+.navbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:15px 40px;
+    background:#001d3d;
+    color:white;
+}
+
+/* Profile container */
+.profile-container{
+    position:relative;
+}
+
+/* Circle */
+.profile-wrapper{
+position:relatve;
+}
+
+.profile-circle{
+    width:45px;
+    height:45px;
+    border-radius:50%;
+    background:#00f2ff;
+    color:black;
+    font-weight:bold;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:18px;
+    cursor:pointer;
+    box-shadow:0 0 10px #00f2ff;
+    transition:0.3s;
+}
+
+.profile-menu{
+display:none;
+position:absolute;
+right:0;
+top:45px;
+background:white;
+border-radius:8px;
+box-shadow:0 0 10px rgba(0,0,0,0.2);
+}
+
+.profile-menu a{
+display:block;
+padding:10px 20px;
+text-decoration:none;
+color:black;
+}
+
+.profile-menu a:hover{
+background:#eee;
+}
+
+.profile-circle:hover{
+    transform:scale(1.1);
+}
+
+/* Dropdown */
+.dropdown-menu{
+    position:absolute;
+    right:0;
+    top:60px;
+    background:#002855;
+    width:180px;
+    border-radius:10px;
+    padding:15px;
+    display:none;
+    box-shadow:0 0 15px rgba(0,0,0,0.5);
+}
+
+.dropdown-menu.show{
+    display:block;
+}
+
+.user-name{
+    font-size:14px;
+    margin-bottom:8px;
+}
+
+.logout-btn{
+    display:block;
+    text-decoration:none;
+    background:#ff4d4d;
+    color:white;
+    padding:8px;
+    border-radius:8px;
+    text-align:center;
+    font-size:14px;
+    transition:0.3s;
+}
+
+.logout-btn:hover{
+    background:#ff1a1a;
+}
+</style>
+
+</style>
+</head>
+
+<script>
+let user = localStorage.getItem("loggedUser");
+
+if(user){
+document.getElementById("userDisplay").innerText = "Hello, " + user;
+}else{
+document.getElementById("userDisplay").innerText = "";
+}
+</script>
+
+<body>
+
+<nav>
+
+<div class="logo">AI CAR</div>
+
+<div class="nav-links">
+
+<a href="{{ url_for('about') }}">About</a>
+<a href="{{ url_for('features') }}">Features</a>
+<a href="{{ url_for('detect') }}">Detect</a>
+<a href="{{ url_for('contact') }}">Contact</a>
+
+{% if first_letter %}
+<div class="profile-wrapper">
+
+    <div class="profile-circle" onclick="toggleMenu()">
+        {{ first_letter }}
+    </div>
+
+    <div id="profileMenu" class="profile-menu">
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+
+</div>
+{% endif %}
+
+</div>
+
+</div>
+
+</nav>
+
+
+<div class="profile-container">
+        <div class="profile-circle" onclick="toggleMenu()">
+            {{ first_letter }}
+        </div>
+
+        <div class="dropdown-menu" id="dropdownMenu">
+            <p class="user-name">{{ name }}</p>
+            <hr>
+            <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+        </div>
+    </div>
+</div>
+
+
+    <!-- Logout Dropdown -->
+    <div id="logoutBox" style="
+        display:none;
+        position:absolute;
+        right:0;
+        top:30px;
+        background:#001d3d;
+        border:1px solid #00f2ff;
+        border-radius:8px;
+        min-width:140px;
+        box-shadow:0 0 15px rgba(0,242,255,0.4);
+        z-index:9999;
+    ">
+        <button onclick="logoutUser()" style="
+            width:100%;
+            padding:10px;
+            border:none;
+            background:none;
+            color:white;
+            cursor:pointer;
+            font-weight:bold;
+        ">
+            🚪 Logout
+        </button>
+    </div>
+</v>
+</div>
+
+</nav>
+
+
+
+<!-- HERO -->
+<section class="hero">
+<h1>LANE & <span>POTHOLE</span> DETECTION</h1>
+<p>AI-Powered Real-Time Road Monitoring & Safety System</p>
+</section>
+
+<!-- IMAGE MODULES -->
+<section class="section">
+<h2>🚗 Detection Modules</h2>
+<div class="feature-grid">
+
+<div class="card">
+<img src="{{ url_for('static', filename='images/img2.png') }}">
+<div class="card-content">
+<h3>Pothole Detection</h3>
+<p>Detects lane markings in real-time.</p>
+</div>
+</div>
+
+<div class="card">
+<img src="{{ url_for('static', filename='images/img1.png') }}">
+<div class="card-content">
+<h3>Lane Detection</h3>
+<p>Identifies damaged road surfaces.</p>
+</div>
+</div>
+
+<div class="card">
+<img src="{{ url_for('static', filename='images/img3.png') }}">
+<div class="card-content">
+<h3>Collision Alert</h3>
+<p>Prevents accidents using AI models.</p>
+</div>
+</div>
+
+</div>
+</section>
+
+<!-- KEY FEATURES -->
+<section class="key-features">
+<h2>🚗 Key Features</h2>
+
+<div class="feature-grid">
+
+<div class="feature-card blue">
+<div class="card-front"><h3>Lane Tracking</h3></div>
+<div class="card-desc">Advanced deep learning lane recognition system.</div>
+</div>
+
+<div class="feature-card red">
+<div class="card-front"><h3>Road Damage Detection</h3></div>
+<div class="card-desc">AI identifies potholes & cracks instantly.</div>
+</div>
+
+<div class="feature-card yellow">
+<div class="card-front"><h3>Collision Warning</h3></div>
+<div class="card-desc">Smart alert system for driver safety.</div>
+</div>
+
+<div class="feature-card purple">
+<div class="card-front"><h3>Live Monitoring</h3></div>
+<div class="card-desc">Real-time camera feed with AI processing.</div>
+</div>
+
+<div class="feature-card green">
+<div class="card-front"><h3>Accuracy Metrics</h3></div>
+<div class="card-desc">Performance tracking dashboard.</div>
+</div>
+
+</div>
+</section>
+
+<!-- STATS -->
+<section class="stats">
+<h2>📊 System Performance</h2>
+
+<div class="stat-grid">
+<div class="stat-box"><h3>98%</h3><p>Lane Accuracy</p></div>
+<div class="stat-box"><h3>95%</h3><p>Pothole Accuracy</p></div>
+<div class="stat-box"><h3>30 FPS</h3><p>Processing Speed</p></div>
+<div class="stat-box"><h3>AI Powered</h3><p>Deep Learning</p></div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+<p>© 2026 AI Car Detection System</p>
+</footer>
+
+<script>
+const sections=document.querySelectorAll(".section");
+
+window.addEventListener("scroll",()=>{
+sections.forEach(sec=>{
+const top=sec.getBoundingClientRect().top;
+if(top<window.innerHeight-100){
+sec.classList.add("show");
+}
+});
+});
+
+</script>
+
+</section>
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+    let user = localStorage.getItem("loggedUser");
+
+    if(user){
+        document.getElementById("userDisplay").innerText = "👤 " + user;
+    }
+});
+
+// Toggle logout menu
+document.getElementById("userDisplay").addEventListener("click", function(){
+    let box = document.getElementById("logoutBox");
+    box.style.display = box.style.display === "block" ? "none" : "block";
+});
+
+// Logout function
+function logoutUser(){
+    if(confirm("Are you sure you want to logout?")){
+        localStorage.removeItem("loggedUser");
+        window.location.href = "{{ url_for('login') }}";
+    }
+}
+</script>
+
+<script>
+function toggleMenu(){
+    document.getElementById("dropdownMenu").classList.toggle("show");
+}
+
+// Close dropdown when clicking outside
+window.onclick = function(event){
+    if (!event.target.matches('.profile-circle')){
+        var dropdown = document.getElementById("dropdownMenu");
+        if (dropdown.classList.contains('show')){
+            dropdown.classList.remove('show');
+        }
+    }
+}
+</script>
+
+</body>
+</html>
